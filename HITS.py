@@ -2,7 +2,7 @@ import random
 from itertools import combinations
 from CommonUtil import Node, normalize, diff
 class HITSGraph():
-    def __init__(self, rows, connectall = False, bidirected = True):
+    def __init__(self, rows, connectall = False, bidirected = False):
         data = dict()
         auth = dict()
         hub = dict()
@@ -24,8 +24,14 @@ class HITSGraph():
                         data[pair[0]].add_parent(pair[1])
                         data[pair[1]].add_children(pair[0])
             else:
-                data[rows[i][0]].add_children(rows[i][1])
-                data[rows[i][1]].add_parent(rows[i][0])
+                if bidirected:
+                    data[rows[i][0]].add_children(rows[i][1])
+                    data[rows[i][1]].add_parent(rows[i][0])
+                    data[rows[i][1]].add_children(rows[i][0])
+                    data[rows[i][0]].add_parent(rows[i][1])
+                else:
+                    data[rows[i][0]].add_children(rows[i][1])
+                    data[rows[i][1]].add_parent(rows[i][0])
         normalize(auth)
         normalize(hub)
         self.data = data
